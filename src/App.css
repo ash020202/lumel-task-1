@@ -1,0 +1,15 @@
+thead,
+td,
+th {
+  border: 2px solid rgba(0, 0, 0, 0.224);
+}
+th {
+  background: black;
+  color: white;
+  padding: 8px;
+}
+
+input {
+  padding: 5px;
+  border: 1px solid skyblue;
+}
