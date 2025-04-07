@@ -19,6 +19,7 @@ const sampleData = {
       ],
     },
   ],
+  overallTotal: 0,
 };
 
 export default sampleData;

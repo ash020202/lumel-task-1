@@ -2,6 +2,7 @@ thead,
 td,
 th {
   border: 2px solid rgba(0, 0, 0, 0.224);
+  padding: 0.5rem;
 }
 th {
   background: black;
@@ -12,4 +13,5 @@ th {
 input {
   padding: 5px;
   border: 1px solid skyblue;
+  border-radius: 4px;
 }

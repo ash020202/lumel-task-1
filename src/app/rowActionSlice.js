@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import sampleData from "../data/sampleData";
-import { updateSingleRow } from "../lib/utils";
+import { calculateOverallTotal, updateSingleRow } from "../lib/utils";
 
 const initialState = {
   rows: sampleData.rows,
+  overallTotal: calculateOverallTotal(sampleData.rows),
   inputValue: {},
 };
 const rowActionSlice = createSlice({
@@ -16,13 +17,16 @@ const rowActionSlice = createSlice({
     },
     updateRowValue: (state, action) => {
       const { id, newValue, isPercentage } = action.payload;
+      const numericValue = newValue;
+      // console.log(typeof numericValue);
       const updatedRows = updateSingleRow(
         state.rows,
         id,
-        newValue,
+        numericValue,
         isPercentage
       );
       state.rows = updatedRows;
+      state.overallTotal = calculateOverallTotal(state.rows);
     },
   },
 });

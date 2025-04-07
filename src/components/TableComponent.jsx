@@ -1,34 +1,10 @@
-import React, { useEffect, useState } from "react";
-import sampleData from "../data/sampleData";
+import React from "react";
 import RowComponent from "./RowComponent";
-import { useDispatch, useSelector } from "react-redux";
-import { setInputValue, updateRowValue } from "../app/rowActionSlice";
+import { useSelector } from "react-redux";
 
 const TableComponent = () => {
-  const inputValue = useSelector((state) => state.rowAction.inputValue);
   const rows = useSelector((state) => state.rowAction.rows);
-  const dispatch = useDispatch();
-  const handleInputValue = (id, value) => {
-    dispatch(setInputValue({ id, value }));
-  };
-
-  const handleAllocationPercent = (id) => {
-    const percentage = parseFloat(inputValue[id]);
-    if (!percentage || isNaN(percentage)) {
-      alert("Please enter a valid percentage value.");
-      return; // Return early if the value is empty or invalid
-    }
-    dispatch(updateRowValue({ id, newValue: percentage, isPercentage: true }));
-  };
-
-  const handleAllocationVal = (id) => {
-    const newValue = parseFloat(inputValue[id]);
-    if (!newValue || isNaN(newValue)) {
-      alert("Please enter a valid value.");
-      return;
-    }
-    dispatch(updateRowValue({ id, newValue, isPercentage: false }));
-  };
+  const overallTotal = useSelector((state) => state.rowAction.overallTotal);
 
   return (
     <div className="h-[100dvh] flex justify-center items-center">
@@ -45,15 +21,12 @@ const TableComponent = () => {
         </thead>
         <tbody className="text-center">
           {rows?.map((item, index) => (
-            <RowComponent
-              key={index}
-              row={item}
-              inputValue={inputValue}
-              onInputChange={handleInputValue}
-              onPercentageChange={handleAllocationPercent}
-              onValueChange={handleAllocationVal}
-            />
+            <RowComponent key={index} row={item} />
           ))}
+          <tr className="bg-black text-white font-semibold capitalize">
+            <td>overall total</td>
+            <td>{Number(overallTotal).toFixed(2)}</td>
+          </tr>
         </tbody>
       </table>
     </div>

@@ -1,33 +1,31 @@
 export const updateSingleRow = (rows, id, newValue, isPercentage) => {
+  // console.log(typeof newValue);
+  newValue = Number(newValue);
   return rows.map((row) => {
-    var oldValue = row.value;
+    let oldValue = parseFloat(row.value);
     if (row.id === id) {
       if (isPercentage) {
-        row.value = row.value + row.value * (newValue / 100);
+        const percentageAmount = row.value * (newValue / 100);
+        row.value = row.value + percentageAmount;
         if (row.children) {
-          row.children.map((child) => {
-            const percentToAddInChild = Number(child.value * (newValue / 100));
+          row.children.forEach((child) => {
+            const percentToAddInChild = child.value * (newValue / 100);
             let childOldValue = child.value;
-            child.value += percentToAddInChild;
+            child.value = child.value + percentToAddInChild;
             child.variance = calculateVariance(childOldValue, child.value);
           });
         }
       } else {
-        const oldRowValue = row.value;
+        const oldRowValue = parseFloat(row.value);
         row.value = newValue;
         if (row.children) {
-          row.children.map((child) => {
+          row.children.forEach((child) => {
             let oldChildValue = child.value;
             let childContributinPercent = (oldChildValue / oldRowValue) * 100;
             const valueToAddInChild =
               row.value * (childContributinPercent / 100);
-            child.value = valueToAddInChild.toFixed(2);
-            console.log(oldChildValue, Number(child.value));
-
-            child.variance = calculateVariance(
-              oldChildValue,
-              Number(child.value)
-            );
+            child.value = valueToAddInChild;
+            child.variance = calculateVariance(oldChildValue, child.value);
           });
         }
       }
@@ -38,8 +36,10 @@ export const updateSingleRow = (rows, id, newValue, isPercentage) => {
         (total, child) => total + child.value,
         0
       );
+      if (oldValue !== updatedChildrenValue) {
+        row.variance = calculateVariance(oldValue, updatedChildrenValue);
+      }
       row.value = updatedChildrenValue;
-      row.variance = calculateVariance(oldValue, row.value);
     }
     return row;
   });
@@ -47,4 +47,12 @@ export const updateSingleRow = (rows, id, newValue, isPercentage) => {
 
 const calculateVariance = (originalValue, newValue) => {
   return ((newValue - originalValue) / originalValue) * 100;
+};
+
+export const calculateOverallTotal = (rows) => {
+  let total = 0;
+  rows.forEach((row) => {
+    total += row.value;
+  });
+  return total;
 };
